@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block metadescription %}
+    {% if category %}
+        {{ category.description|truncatewords:155}}
+    {% else %}
+        Welcome to Mintmade store where you can by anything you need
+    {% endif %}
+{% endblock %}
+
+{% block title %}
+    {% if category %}
+        {{ category.name}}-Mintmade Store
+    {% else %}
+        See our new Collection-Mintmade Store
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+{% if category %}
+    <div>
+        <div class="row my_row_class">
+            <div class="mx_auto">
+                <p><a href="{% url 'shop:allProdCat' %}">Our Product Collections</a></p>
+            </div>
+        </div>
+    </div>
+{% endif %}
+<div class="mx_auto">
+    {% if category %}
+        <img class="my_image" src="{{ category.image.url }}" alt="{{ category.name }}" style="width: 200px; height: 200px;">
+</div>
+<br>
+<div>
+    <h1 class="text-center  my_title">{{  category.name }}</h1>
+    <p class="text-justify">{{ category.description }}</p>
+</div>
+{% else %}
+<div>
+    <img class="my_image my_image_padding" src="{% static 'img/banner.png' %}" alt="Our Products" width="1450px" height="500px">
+</div>
+<br>
+<div>
+    <h1 class="text-center my_title"> Our product Collections</h1>
+    <p class="text-justify">The European languages are members of the same family. Their separate existence is a myth. For science, music, sport, etc, Europe uses the same vocabulary. The languages only differ in their grammar, their pronunciation and their most common words. Everyone realizes why a new common language would be desirable: one could refuse to pay expensive translators. To achieve this, it would be necessary to have uniform grammar, pronunciation and more common words. If several languages coalesce, the grammar of the resulting language is more simple and regular than that of the individual languages. The new common language will be more simple and regular than the existing European languages. It will be as simple as Occidental; in fact, it will be Occidental. </p>
+</div>
+{% endif %}
+<div class="container">
+    <div class="row mx_auto">
+        {% for product in products.object_list %}
+        <div class="my_bottom_margin col-9 col-sm-12 col-md-4 col-lg-4">
+            <div class="card text-center" style="min-width:18rem;">
+                <a href="{{ product.get_url}}"><img class="card-img-top my_product_image" src="{{product.image.url}}" alt="{{ product.name }}" width="200" height="200"></a>
+                <div class="card-body">
+                    <h4>{{ product.name }}</h4>
+                    <p>{{ product.price }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="mx-auto">
+        {% if products.paginator.num_pages > 1 %}
+
+        <hr>
+        <div class="text-center">
+            {% for pg in products.paginator.page_range %}
+                <a href="?page={{pg}}" class="btn btn-light btn-sm" {% if products.number == pg %} active {% endif %}>{{pg}}</a>
+            {% endfor %}
+        </div>
+        {% endif%}
+    </div>
+    <br>
+</div>
+
+{% endblock %}
